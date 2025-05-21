@@ -1,275 +1,637 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Love & Care Portal</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Horror Stories Portal</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body, html {
+    height: 100%;
+    overflow-x: hidden;
+  }
 
-    body {
-      background: linear-gradient(135deg, #ffe3e3, #ffd6ec);
-      min-height: 100vh;
-      overflow-x: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
+  /* ===== Login page styles ===== */
+  body.login {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-    /* Heart Animation Background */
-    .hearts {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
+  /* Animated hearts behind login */
+  .hearts {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .hearts span {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #ff3864;
+    transform: rotate(45deg);
+    animation: float 10s linear infinite;
+    opacity: 0.7;
+    border-radius: 2px;
+  }
+  .hearts span::before,
+  .hearts span::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #ff3864;
+    border-radius: 50%;
+  }
+  .hearts span::before { top: -9px; left: 0; }
+  .hearts span::after { top: 0; left: -9px; }
+  @keyframes float {
+    0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-20vh) rotate(45deg); opacity: 0; }
+  }
+  /* Create many hearts at different positions and delays */
+  .hearts span:nth-child(1) { left: 5%; animation-delay: 0s; }
+  .hearts span:nth-child(2) { left: 15%; animation-delay: 2s; }
+  .hearts span:nth-child(3) { left: 25%; animation-delay: 4s; }
+  .hearts span:nth-child(4) { left: 35%; animation-delay: 1s; }
+  .hearts span:nth-child(5) { left: 45%; animation-delay: 3s; }
+  .hearts span:nth-child(6) { left: 55%; animation-delay: 5s; }
+  .hearts span:nth-child(7) { left: 65%; animation-delay: 0.5s; }
+  .hearts span:nth-child(8) { left: 75%; animation-delay: 2.5s; }
+  .hearts span:nth-child(9) { left: 85%; animation-delay: 4.5s; }
+  .hearts span:nth-child(10) { left: 95%; animation-delay: 1.5s; }
 
-    .hearts span {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 10s linear infinite;
-      opacity: 0.7;
-    }
+  .login-container {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.95);
+    padding: 2rem;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(255, 56, 100, 0.4);
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+  }
+  .login-container h2 {
+    margin-bottom: 1.5rem;
+    color: #ff3864;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    border: 1.5px solid #ff7eb3;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  input:focus {
+    border-color: #ff3864;
+  }
+  button {
+    background: #ff3864;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.3s ease;
+    letter-spacing: 1.5px;
+  }
+  button:hover {
+    background: #ff1f51;
+  }
+  .error {
+    color: #d90429;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
 
-    .hearts span::before,
-    .hearts span::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-    }
+  /* ===== After login page ===== */
+  body.main {
+    background: radial-gradient(circle at center, #1b0a29, #0a041f);
+    color: #e0d4e7;
+    min-height: 100vh;
+    font-size: 18px;
+  }
 
-    .hearts span::before {
-      top: -10px;
-      left: 0;
+  /* Mysterious animated background (floating particles) */
+  #mysteryBg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at center, #220833 0%, #0a041f 80%);
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    animation-timing-function: linear;
+    opacity: 0.8;
+  }
+  /* Different particle sizes and speeds */
+  .particle.small {
+    width: 5px; height: 5px;
+    animation-name: floatUp;
+    animation-duration: 15s;
+  }
+  .particle.medium {
+    width: 10px; height: 10px;
+    animation-name: floatUp;
+    animation-duration: 20s;
+  }
+  .particle.large {
+    width: 15px; height: 15px;
+    animation-name: floatUp;
+    animation-duration: 25s;
+  }
+  @keyframes floatUp {
+    0% {
+      transform: translateY(100vh);
+      opacity: 0;
     }
-
-    .hearts span::after {
-      top: 0;
-      left: -10px;
+    50% {
+      opacity: 0.8;
     }
-
-    @keyframes float {
-      0% {
-        transform: translateY(100vh) rotate(45deg);
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-10vh) rotate(45deg);
-        opacity: 0;
-      }
+    100% {
+      transform: translateY(-20vh);
+      opacity: 0;
     }
+  }
 
-    /* Repeat hearts */
-    .hearts span:nth-child(odd) { background: #ff6f91; }
-    .hearts span:nth-child(even) { background: #ff3c6f; }
+  /* Main container */
+  #mainContent {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(22, 7, 48, 0.85);
+    border-radius: 25px;
+    box-shadow: 0 0 30px #b362ffaa;
+  }
 
-    /* Login Form */
-    .login-container {
-      background: white;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      width: 90%;
-      max-width: 350px;
-      text-align: center;
-      animation: fadeIn 1s ease;
-      position: relative;
-      z-index: 1;
-    }
+  /* Navbar */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .navbar a {
+    color: #d9b3ff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 15px;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  .navbar a:hover {
+    background: #7f59ff66;
+  }
+  .navbar a.active {
+    background: #b362ffcc;
+    color: white;
+  }
 
-    h2 {
-      margin-bottom: 1.5rem;
-      color: #ff6f91;
-    }
+  /* Sections */
+  section {
+    display: none;
+    animation: fadeInSection 0.7s ease forwards;
+  }
+  section.active {
+    display: block;
+  }
+  @keyframes fadeInSection {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+  }
 
-    input {
-      width: 100%;
-      padding: 10px 15px;
-      margin: 10px 0;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
+  /* Story content */
+  .story {
+    margin-bottom: 2rem;
+  }
+  .story h3 {
+    color: #ce94ff;
+    margin-bottom: 0.5rem;
+  }
+  .story p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    color: #e0d4e7;
+  }
 
-    button {
-      background-color: #ff6f91;
-      color: white;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      font-size: 1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      margin-top: 1rem;
-    }
+  /* Comment & reactions container */
+  .comments-section {
+    margin-top: 1.5rem;
+    background: #341a70cc;
+    border-radius: 15px;
+    padding: 1rem;
+    color: #d4bfff;
+  }
+  .comments-section h4 {
+    margin-bottom: 1rem;
+    color: #b8a1ff;
+  }
+  .comment {
+    background: #4e2ba8cc;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+  }
+  .comment strong {
+    color: #d9b3ff;
+  }
+  .comment-time {
+    font-size: 0.75rem;
+    color: #b8a1ff88;
+  }
+  textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    resize: vertical;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 0.5rem;
+  }
+  button.react-btn, button.comment-btn {
+    background: #b362ff;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 8px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background 0.3s ease;
+  }
+  button.react-btn:hover, button.comment-btn:hover {
+    background: #7f59ff;
+  }
 
-    button:hover {
-      background-color: #ff3c6f;
-    }
+  /* Feedback section */
+  #feedback form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  #feedback label {
+    display: block;
+    margin: 12px 0 6px 0;
+    font-weight: 600;
+  }
+  #feedback input, #feedback textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  #feedback button {
+    margin-top: 1rem;
+  }
 
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
+  /* Footer */
+  footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #aa99cc;
+  }
 
-    .hidden {
-      display: none;
-    }
-
-    /* Navbar */
-    .navbar {
-      background-color: white;
-      display: flex;
-      justify-content: space-around;
-      padding: 1rem;
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-
-    .navbar a {
-      text-decoration: none;
-      color: #ff6f91;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-      cursor: pointer;
-    }
-
-    .navbar a:hover {
-      background-color: #ffe3ec;
-    }
-
-    .section {
-      padding: 2rem;
-      background-color: white;
-      border-radius: 0 0 20px 20px;
-      margin-top: 1rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-      animation: fadeIn 0.5s ease;
-    }
-
-    .section h3 {
-      color: #ff6f91;
-      margin-bottom: 1rem;
-    }
-
-    .section p {
-      font-size: 1.1rem;
-      color: #444;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 500px) {
-      .navbar {
-        flex-direction: column;
-        gap: 10px;
-      }
-    }
-  </style>
+</style>
 </head>
-<body>
+<body class="login">
 
-  <!-- Animated Heart Background -->
-  <div class="hearts">
-    <!-- Add 20 hearts -->
-    <span style="left: 10%; animation-delay: 0s;"></span>
-    <span style="left: 20%; animation-delay: 1s;"></span>
-    <span style="left: 30%; animation-delay: 2s;"></span>
-    <span style="left: 40%; animation-delay: 3s;"></span>
-    <span style="left: 50%; animation-delay: 4s;"></span>
-    <span style="left: 60%; animation-delay: 5s;"></span>
-    <span style="left: 70%; animation-delay: 6s;"></span>
-    <span style="left: 80%; animation-delay: 7s;"></span>
-    <span style="left: 90%; animation-delay: 8s;"></span>
-    <span style="left: 95%; animation-delay: 9s;"></span>
-    <span style="left: 5%; animation-delay: 1s;"></span>
-    <span style="left: 15%; animation-delay: 2s;"></span>
-    <span style="left: 25%; animation-delay: 3s;"></span>
-    <span style="left: 35%; animation-delay: 4s;"></span>
-    <span style="left: 45%; animation-delay: 5s;"></span>
-    <span style="left: 55%; animation-delay: 6s;"></span>
-    <span style="left: 65%; animation-delay: 7s;"></span>
-    <span style="left: 75%; animation-delay: 8s;"></span>
-    <span style="left: 85%; animation-delay: 9s;"></span>
-    <span style="left: 92%; animation-delay: 10s;"></span>
-  </div>
+<!-- Hearts animated background for login -->
+<div class="hearts" aria-hidden="true">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
 
-  <!-- Login Form -->
-  <div class="login-container" id="loginPage">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="login()">Login</button>
-    <p class="error" id="errorMsg"></p>
-  </div>
+<!-- Login Container -->
+<div class="login-container" id="loginPage">
+  <h2>Login to Horror Stories</h2>
+  <input id="username" type="text" placeholder="Username" autocomplete="off" aria-label="Username"/>
+  <input id="password" type="password" placeholder="Password" autocomplete="off" aria-label="Password"/>
+  <button onclick="login()">Login</button>
+  <p class="error" id="errorMsg" role="alert" aria-live="assertive"></p>
+</div>
 
-  <!-- Main Content -->
-  <div class="hidden" id="mainContent" style="width: 90%; max-width: 700px;">
-    <!-- Menu -->
-    <div class="navbar">
-      <a onclick="showSection('about')">About</a>
-      <a onclick="logout()">Logout</a>
+<!-- After Login Content -->
+<div id="mysteryBg" style="display:none;" aria-hidden="true"></div>
+
+<div id="mainContent" style="display:none;" role="main" aria-label="Main content">
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main menu">
+    <a href="#" class="active" data-section="storyEng" onclick="switchSection(event)">Story Summary (English)</a>
+    <a href="#" data-section="storyBan" onclick="switchSection(event)">গল্প সারাংশ (Bangla)</a>
+    <a href="#" data-section="feedback" onclick="switchSection(event)">Feedback</a>
+  </nav>
+
+  <!-- Story Summary English -->
+  <section id="storyEng" class="active" tabindex="0">
+    <div class="story" id="story1">
+      <h3>The Haunting of Hill House</h3>
+      <p>A chilling tale of a family terrorized by supernatural forces in their inherited mansion, testing their sanity and unity.</p>
+      <CommentsSection storyId="story1"></CommentsSection>
     </div>
-
-    <!-- About Section -->
-    <div class="section" id="about">
-      <h3>About This Website</h3>
-      <p>
-        Welcome to our website! We're passionate about creating meaningful digital experiences and delivering value through our content and services. Whether you're here to learn something new, explore our offerings, or just browsing—thank you for visiting.
-      </p>
+    <div class="story" id="story2">
+      <h3>Whispers in the Dark</h3>
+      <p>In a small town, mysterious voices lure the curious into an ancient forest where darkness reigns and no one returns the same.</p>
+      <CommentsSection storyId="story2"></CommentsSection>
     </div>
-  </div>
+    <div class="story" id="story3">
+      <h3>The Forgotten Cellar</h3>
+      <p>Discovering a hidden cellar in an old house reveals secrets that should have stayed buried and awaken restless spirits.</p>
+      <CommentsSection storyId="story3"></CommentsSection>
+    </div>
+  </section>
 
-  <script>
-    function login() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const error = document.getElementById("errorMsg");
+  <!-- গল্প সারাংশ বাংলা -->
+  <section id="storyBan" tabindex="0">
+    <div class="story" id="story4">
+      <h3>হিল হাউসের আতঙ্ক</h3>
+      <p>এক পরিবার তাদের উত্তরাধিকারসূত্রে প্রাপ্ত বাড়িতে অতিপ্রাকৃত শক্তির শিকার হয়, যা তাদের মানসিক অবস্থাকে পরীক্ষার মুখোমুখি করে।</p>
+      <CommentsSection storyId="story4"></CommentsSection>
+    </div>
+    <div class="story" id="story5">
+      <h3>অন্ধকারে ফিসফিস</h3>
+      <p>এক ছোট শহরে রহস্যময় কণ্ঠস্বর প্রাচীন জঙ্গলে ডাকে, যেখানে অন্ধকার রাজত্ব করে এবং কেউ আগের মতো ফিরে আসে না।</p>
+      <CommentsSection storyId="story5"></CommentsSection>
+    </div>
+    <div class="story" id="story6">
+      <h3>ভুলে যাওয়া সেলার</h3>
+      <p>এক পুরানো বাড়ির লুকানো সেলার আবিষ্কার গোপনীয়তা ফাঁস করে যা কখনো না জানানো উচিত ছিল এবং বিশ্রামহীন আত্মাদের জাগ্রত করে।</p>
+      <CommentsSection storyId="story6"></CommentsSection>
+    </div>
+  </section>
 
-      if (username === "anushreemrinmoy" && password === "1022") {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("mainContent").classList.remove("hidden");
-        error.textContent = "";
-      } else {
-        error.textContent = "Enter Correct Info";
+  <!-- Feedback Section -->
+  <section id="feedback" tabindex="0">
+    <h3>Send Us Your Feedback</h3>
+    <form id="feedbackForm" onsubmit="submitFeedback(event)" aria-label="Feedback form">
+      <label for="nameInput">Name:</label>
+      <input id="nameInput" type="text" placeholder="Your name" required />
+      <label for="emailInput">Email:</label>
+      <input id="emailInput" type="email" placeholder="Your email" required />
+      <label for="messageInput">Message:</label>
+      <textarea id="messageInput" rows="5" placeholder="Your feedback or suggestion" required></textarea>
+      <button type="submit">Send Feedback</button>
+    </form>
+    <p id="feedbackMsg" aria-live="polite" role="status"></p>
+  </section>
+
+  <footer>
+    All rights reserved by Mrinmoy Das
+  </footer>
+</div>
+
+<script>
+  // Credentials
+  const USERNAME = "anusheemrinmoy";
+  const PASSWORD = "1022";
+
+  function login() {
+    const u = document.getElementById("username").value.trim();
+    const p = document.getElementById("password").value.trim();
+    const errorMsg = document.getElementById("errorMsg");
+
+    if (u === USERNAME && p === PASSWORD) {
+      // Successful login
+      document.body.classList.remove('login');
+      document.body.classList.add('main');
+
+      // Hide login and hearts
+      document.getElementById("loginPage").style.display = "none";
+      document.querySelector(".hearts").style.display = "none";
+
+      // Show main content and background
+      document.getElementById("mysteryBg").style.display = "block";
+      document.getElementById("mainContent").style.display = "block";
+
+      errorMsg.textContent = "";
+
+      initParticles();
+    } else {
+      errorMsg.textContent = "Incorrect username or password!";
+    }
+  }
+
+  // Section switching
+  function switchSection(e) {
+    e.preventDefault();
+    const target = e.target.getAttribute("data-section");
+
+    // Update navbar active class
+    document.querySelectorAll('.navbar a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute("data-section") === target);
+    });
+
+    // Show selected section, hide others
+    document.querySelectorAll('section').forEach(sec => {
+      sec.classList.toggle('active', sec.id === target);
+    });
+  }
+
+  // Particle animation in main background
+  function initParticles() {
+    const container = document.getElementById('mysteryBg');
+    const numParticles = 30;
+    for(let i=0; i<numParticles; i++) {
+      const p = document.createElement('div');
+      p.classList.add('particle');
+      // Random size
+      const sizes = ['small','medium','large'];
+      const size = sizes[Math.floor(Math.random()*sizes.length)];
+      p.classList.add(size);
+
+      // Random left position
+      p.style.left = (Math.random()*100) + 'vw';
+      // Random animation delay
+      p.style.animationDelay = (Math.random()*20) + 's';
+      // Random animation duration variation
+      p.style.animationDuration = (15 + Math.random()*15) + 's';
+
+      container.appendChild(p);
+    }
+  }
+
+  // Feedback form submission (just show a thank you message)
+  function submitFeedback(event) {
+    event.preventDefault();
+    const name = document.getElementById("nameInput").value.trim();
+    const email = document.getElementById("emailInput").value.trim();
+    const message = document.getElementById("messageInput").value.trim();
+    const feedbackMsg = document.getElementById("feedbackMsg");
+
+    // Basic validation done by required attr
+    feedbackMsg.textContent = `Thank you, ${name}! Your feedback has been noted. We'll reach out to you at ${email} if needed.`;
+    event.target.reset();
+
+    // Note: To actually send mail, you'd need a backend or email API service.
+    // Here, you can add integration or instructions if desired.
+  }
+
+  // Comment system implementation
+  // We'll store comments in localStorage per story
+  function CommentsSection({storyId}) {
+    // This is just a placeholder for JSX-style declaration
+    // We'll implement comments dynamically via script below
+  }
+
+  // After page loaded: generate comments sections dynamically
+  document.addEventListener('DOMContentLoaded', () => {
+    // For each story, add comments UI
+    document.querySelectorAll('.story').forEach(storyDiv => {
+      const storyId = storyDiv.id;
+      const commentsContainer = document.createElement('div');
+      commentsContainer.className = 'comments-section';
+      commentsContainer.setAttribute('aria-label', 'Comments and reactions');
+
+      const title = document.createElement('h4');
+      title.textContent = "Comments & Reactions";
+      commentsContainer.appendChild(title);
+
+      const commentsList = document.createElement('div');
+      commentsList.className = 'comments-list';
+      commentsContainer.appendChild(commentsList);
+
+      // Comment input
+      const commentInput = document.createElement('textarea');
+      commentInput.placeholder = "Write a comment...";
+      commentInput.rows = 2;
+      commentInput.setAttribute('aria-label', 'Write a comment');
+      commentsContainer.appendChild(commentInput);
+
+      // Submit comment button
+      const submitBtn = document.createElement('button');
+      submitBtn.className = 'comment-btn';
+      submitBtn.textContent = 'Post Comment';
+      commentsContainer.appendChild(submitBtn);
+
+      // Reactions buttons
+      const reactions = ['👍', '❤️', '😱', '👻'];
+      const reactionButtonsDiv = document.createElement('div');
+      reactionButtonsDiv.style.marginTop = '10px';
+      reactions.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'react-btn';
+        btn.textContent = r;
+        btn.title = `React with ${r}`;
+        reactionButtonsDiv.appendChild(btn);
+
+        btn.addEventListener('click', () => {
+          addReaction(storyId, r);
+          renderComments(storyId, commentsList);
+        });
+      });
+      commentsContainer.appendChild(reactionButtonsDiv);
+
+      storyDiv.appendChild(commentsContainer);
+
+      // Load and render existing comments
+      renderComments(storyId, commentsList);
+
+      // Submit comment event
+      submitBtn.addEventListener('click', () => {
+        const commentText = commentInput.value.trim();
+        if (!commentText) return;
+        addComment(storyId, commentText);
+        commentInput.value = '';
+        renderComments(storyId, commentsList);
+      });
+    });
+  });
+
+  // Helper to get comments from localStorage
+  function getComments(storyId) {
+    const data = localStorage.getItem(`comments_${storyId}`);
+    return data ? JSON.parse(data) : [];
+  }
+  // Helper to save comments
+  function saveComments(storyId, comments) {
+    localStorage.setItem(`comments_${storyId}`, JSON.stringify(comments));
+  }
+
+  // Add comment
+  function addComment(storyId, text) {
+    const comments = getComments(storyId);
+    comments.push({
+      id: Date.now(),
+      text,
+      timestamp: new Date().toISOString(),
+      reactions: {}
+    });
+    saveComments(storyId, comments);
+  }
+
+  // Add reaction to last comment for demo (or extend to select comment)
+  function addReaction(storyId, emoji) {
+    const comments = getComments(storyId);
+    if (comments.length === 0) return alert("Add a comment first to react!");
+    const lastComment = comments[comments.length - 1];
+    lastComment.reactions[emoji] = (lastComment.reactions[emoji] || 0) + 1;
+    saveComments(storyId, comments);
+  }
+
+  // Render comments in container
+  function renderComments(storyId, container) {
+    container.innerHTML = "";
+    const comments = getComments(storyId);
+    if (comments.length === 0) {
+      container.textContent = "No comments yet. Be the first to comment!";
+      return;
+    }
+    comments.forEach(c => {
+      const cDiv = document.createElement('div');
+      cDiv.className = 'comment';
+      const strong = document.createElement('strong');
+      strong.textContent = 'User: ';
+      cDiv.appendChild(strong);
+
+      const spanText = document.createElement('span');
+      spanText.textContent = c.text;
+      cDiv.appendChild(spanText);
+
+      // Reaction display
+      if (c.reactions && Object.keys(c.reactions).length > 0) {
+        const reactionSpan = document.createElement('div');
+        reactionSpan.style.marginTop = '5px';
+        for (const [emoji, count] of Object.entries(c.reactions)) {
+          reactionSpan.textContent += `${emoji} ${count}  `;
+        }
+        cDiv.appendChild(reactionSpan);
       }
-    }
 
-    function logout() {
-      document.getElementById("mainContent").classList.add("hidden");
-      document.getElementById("loginPage").classList.remove("hidden");
-      document.getElementById("username").value = "";
-      document.getElementById("password").value = "";
-    }
+      const timeSpan = document.createElement('div');
+      timeSpan.className = 'comment-time';
+      timeSpan.textContent = new Date(c.timestamp).toLocaleString();
+      cDiv.appendChild(timeSpan);
 
-    function showSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  </script>
+      container.appendChild(cDiv);
+    });
+  }
+</script>
 </body>
 </html>
